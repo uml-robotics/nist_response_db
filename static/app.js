@@ -274,15 +274,33 @@ function buildTileHTML(row, index) {
   const [titleField, ...restFields] = fields;
   const titleVal = row[titleField];
 
-  const allPopulated = Object.keys(row).filter(k => !isBlank(row[k]));
+  const allPopulated = Object.keys(row).filter(
+    k => !isBlank(row[k]) && k !== "image_url"
+  );
   const shownSet = new Set(fields);
+  shownSet.add("image_url");
   const extraCount = allPopulated.filter(k => !shownSet.has(k)).length;
 
-  const fieldsHTML = restFields.map(k => `
-    <div class="tile-field">
-      <span class="field-key">${escHtml(k)}</span>
-      <span class="field-val">${escHtml(String(row[k]))}</span>
-    </div>`).join("");
+  const imageHTML = row.image_url
+    ? `
+      <div class="tile-image-wrap">
+        <img
+          class="tile-image"
+          src="${escHtml(String(row.image_url))}"
+          alt="${escHtml(String(titleVal))}"
+          loading="lazy"
+        />
+      </div>`
+    : "";
+
+  const fieldsHTML = restFields
+    .filter(k => k !== "image_url")
+    .map(k => `
+      <div class="tile-field">
+        <span class="field-key">${escHtml(k)}</span>
+        <span class="field-val">${escHtml(String(row[k]))}</span>
+      </div>`)
+    .join("");
 
   const footerHTML = extraCount > 0
     ? `<div class="tile-footer">+${extraCount} more field${extraCount !== 1 ? "s" : ""}</div>`
@@ -290,6 +308,7 @@ function buildTileHTML(row, index) {
 
   return `
     <div class="tile" style="animation-delay:${Math.min(index * 20, 300)}ms">
+      ${imageHTML}
       <div class="tile-title">${escHtml(String(titleVal))}</div>
       <div class="tile-fields">${fieldsHTML}</div>
       ${footerHTML}
