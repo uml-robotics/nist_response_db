@@ -36,14 +36,23 @@ This package creates a postgres database from provided csv files which can be in
 ```
 project/
 ├── csv/ 
+│   ├── .gitkeep
+│   ├── Robot Embodiment.csv
+│   └── Robot Manifest.csv
 ├── app.py 
 ├── db.py 
 ├── config.py 
 ├── import_csv_to_postgres.py 
 ├── requirements.txt
+├── .gitignore
+├── README.md
 ├── templates/ 
 │   └── index.html 
 └── static/ 
+    ├── robot_images/ 
+    │   └── ...
+    ├── robot_thumbnails/
+    │   └── ...
     ├── style.css 
     └── app.js
 ```
@@ -82,6 +91,7 @@ Install python virtual environment libraries if not installed. This can be done 
 ```bash
 sudo apt update
 sudo apt install -y python3 python3-venv python3-pip
+sudo apt install -y libpq-dev python3-dev build-essential
 
 # make a directory for your virtual environments
 mkdir -p ~/venvs
@@ -93,17 +103,39 @@ Create and source your virtual environment and install package requirements.
 # if you followed along above, your virtual environment will be called database and installed in your ~/venvs directory
 python3 -m venv ~/venv/database
 
+# source your virtual python environment
+# if you followed along above you can source it with the following command, otherwise use your custom path
+source ~/venv/database/bin/activate
+
 # navigate to the base directory of this repository and install python libraries
 # e.g. cd ~/database_ws/nist_response_db
 pip install -r requirements.txt
+```
 
+You will need to enter they postgres database to make a password adjustment before you can start to upload tables
+```bash
+# for first time setup, enter psql (postgres sql server) and perform some setup operations
+sudo -u postgres psql
+
+# for local work, this temporary password will suffice, make sure password matches in config.py
+ALTER USER postgres WITH PASSWORD 'postgres';
+CREATE DATABASE nist_response_db;
+```
+
+Now you can start to add your tables and data
+
+```bash
 # run script to build database by uploading csv files to database as tables
 python import_csv_to_postgres.py
+python import_robot_images.py
 ```
 
 # 2. Postgres Usage
 
 ## 2.1 First Time Setup
+
+If you followed the installation instructions, you will have already completed this step and can skip ahead to section 2.2
+
 ```bash
 # for first time setup, enter psql (postgres sql server) and perform some setup operations
 sudo -u postgres psql
