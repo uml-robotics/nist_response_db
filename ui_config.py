@@ -116,13 +116,17 @@ TABLE_CONFIG = {
     },
 
     "robot_embodiment": {
-        "card_fields": ["robot_embodiment_test_method_short_name","robot_make", "robot_model", "date", "facility"],
-        "modal_groups": [
-            {"label": "Identity",   "fields": ["robot_make", "robot_model", "date", "facility"]},
-            # {"label": "Physical",   "fields": ["height_m", "weight_kg", "dof", "form_factor"]},
-            # {"label": "Actuation",  "fields": ["actuator_type", "num_joints", "payload_kg"]},
-        ],
-    },
+    "card_fields": ["robot_make", "robot_model", "robot_config", "weight_lbs"],
+    "modal_groups": [
+        {"label": "Identity", 
+         "fields": ["robot_id", 
+                    "robot_make", 
+                    "robot_model", 
+                    "robot_config"]},
+        {"label": "Physical", 
+         "fields": ["weight_lbs"]},
+    ],
+},
 
     "sensing": {
         "card_fields": ["sensing_test_method_short_name","robot_make", "robot_model", "date", "facility"],
